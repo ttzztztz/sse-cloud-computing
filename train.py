@@ -9,8 +9,8 @@ class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
         self.layer1 = nn.Sequential(
-            nn.Conv2d(1, 25, kernel_size=3),
-            nn.BatchNorm2d(25),
+            nn.Conv2d(1, 20, kernel_size=3),
+            nn.BatchNorm2d(20),
             nn.ReLU(inplace=True)
         )
 
@@ -19,7 +19,7 @@ class CNN(nn.Module):
         )
 
         self.layer3 = nn.Sequential(
-            nn.Conv2d(25, 50, kernel_size=3),
+            nn.Conv2d(20, 50, kernel_size=3),
             nn.BatchNorm2d(50),
             nn.ReLU(inplace=True)
         )
@@ -80,8 +80,7 @@ for data in train_loader:
     loss.backward()
     optimizer.step()
     epoch += 1
-    if epoch % 50 == 0:
-        print('epoch: {}, loss: {:.4}'.format(epoch, loss.data.item()))
+    print('epoch: {}, loss: {:.4}'.format(epoch, loss.data.item()))
 torch.save(model, 'CNN_for_MNIST.pth')
 
 model.eval()
@@ -100,7 +99,7 @@ for data in test_loader:
     num_correct = (pred == label).sum()
     eval_acc += num_correct.item()
 
-print('Test Loss: {:.6f}, Acc: {:.6f}'.format(
-    eval_loss / (len(test_dataset)),
-    eval_acc / (len(test_dataset))
+print('Loss: {:.6f}%, Acc: {:.6f}%'.format(
+    100.0 * eval_loss / (len(test_dataset)),
+    100.0 * eval_acc / (len(test_dataset))
 ))
