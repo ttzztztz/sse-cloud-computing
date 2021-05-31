@@ -46,25 +46,27 @@ class CNN(nn.Module):
         return x
 
 
-batch_size = 64
-learning_rate = 0.02
+batch_size, learning_rate = 64, 0.02
 num_epoches = 20
+
 data_tf = transforms.Compose(
     [transforms.ToTensor(), transforms.Normalize([0.5], [0.5])])
+model = CNN()
 
 train_dataset = datasets.MNIST(
     root='./data', train=True, transform=data_tf, download=True)
 test_dataset = datasets.MNIST(root='./data', train=False, transform=data_tf)
+
 train_loader = DataLoader(train_dataset, batch_size=batch_size, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=batch_size, shuffle=False)
 
-model = CNN()
 if torch.cuda.is_available():
     model = model.cuda()
 
 criterion = nn.CrossEntropyLoss()
 optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 epoch = 0
+
 for data in train_loader:
     img, label = data
     if torch.cuda.is_available():
@@ -81,7 +83,8 @@ for data in train_loader:
     optimizer.step()
     epoch += 1
     print('epoch: {}, loss: {:.4}'.format(epoch, loss.data.item()))
-torch.save(model, 'CNN_for_MNIST.pth')
+
+torch.save(model, 'mnist.pth')
 
 model.eval()
 eval_loss = 0
